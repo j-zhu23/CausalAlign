@@ -6,9 +6,7 @@
   <a href="https://huggingface.co/papers/2603.02133"><img src="https://img.shields.io/badge/Hugging%20Face-Daily%20Paper-FFD21E" alt="Hugging Face Daily Paper"></a>
 </p>
 
-CausalAlign improves the ego-motion consistency of video generation models through causal diagnosis and delta-token alignment.
-
-> The arXiv and Hugging Face links are temporary placeholders pointing to SimRecon. They will be updated when the CausalAlign paper pages are available.
+Kai Zhu, Yintianrun Zhang, Shuwei Jiang, Ruolin Zuo, Yixin Chen, Duomin Wang, Miao Liu, Yin Li, Daquan Zhou, Yiwu Zhong
 
 ## Demo
 
@@ -16,7 +14,4 @@ CausalAlign improves the ego-motion consistency of video generation models throu
 
 [Watch the demo online](https://pku-value-lab.github.io/CausalAlign-homepage/#demo) · [Download the demo MP4](demo/CausalAlign_demo_106s.mp4)
 
-## Code
-
-- Training code: **Stay tuned.**
-- Evaluation code: **Stay tuned.**
+Training and evaluation code: **Stay tuned.**
