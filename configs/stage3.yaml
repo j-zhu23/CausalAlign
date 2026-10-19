@@ -10,7 +10,7 @@ wan:
   gradient_checkpointing: true
 targets:
   layers: [10, 12, 14, 20]
-  progress: [398, 799]
+  progress: [398, 799]  # indices in the descending 1000-step Wan scheduler
   progress_weights: {398: 0.5, 799: 0.5}
 lora:
   rank: 16

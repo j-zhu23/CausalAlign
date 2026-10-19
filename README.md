@@ -39,12 +39,12 @@ Detailed Chinese documentation is available in [README_CN.md](README_CN.md).
 | Delta-token | 128D = 64 camera + 40 geometry + 24 visual |
 | Stage 1 | 40,000 updates; 4,000-scene warmup followed by 8,312 scenes |
 | Stage 1 objective | L_transition + 0.1 L_temporal + 0.2 L_pose |
-| Stage 2 targets | layers 10, 12, 14, 20 at native timesteps 398 and 799 |
+| Stage 2 targets | layers 10, 12, 14, 20 at denoising-progress indices 398 and 799 |
 | Stage 3 LoRA | rank 16, alpha 16, self/cross-attention Q/K/V/O |
 | Stage 3 objective | L_pose + 0.2 L_delta |
 | Stage 3 optimizer | AdamW, LR 7e-6, global batch 72, 12 updates |
 
-Native diffusion timesteps are matched by scheduler value rather than treated as scheduler-array indices.
+The paper's denoising progress is the index of the descending 1,000-step Wan scheduler. Progress 398 is earlier and higher-noise than progress 799; the native timestep and sigma are read from those scheduler entries.
 
 ## Installation
 

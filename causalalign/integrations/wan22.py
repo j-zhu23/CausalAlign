@@ -91,21 +91,18 @@ class Wan22TransitionBackend(nn.Module):
             method()
 
     def scheduler_point(self, progress: int, device: torch.device) -> tuple[torch.Tensor, torch.Tensor]:
-        """Resolve a requested native diffusion timestep on the active scheduler.
+        """Map paper denoising progress to the native Wan timestep and sigma.
 
-        Wan's shifted flow scheduler does not place native timestep 398 at array
-        index 398.  Matching by value keeps the 398/799 intervention points
-        stable across compatible diffusers releases and scheduler shifts.
+        Progress indexes the descending 1000-step scheduler: smaller indices
+        are earlier, higher-noise states. It is not a native timestep value.
         """
         self.scheduler.set_timesteps(1000, device=device)
-        timesteps = self.scheduler.timesteps.to(device=device, dtype=torch.float32)
-        index = int(torch.argmin((timesteps - float(progress)).abs()).item())
+        index = int(progress)
+        if index != progress or not 0 <= index < len(self.scheduler.timesteps):
+            raise ValueError(f"denoising progress must be a scheduler index in [0, {len(self.scheduler.timesteps)}), got {progress}")
+        if self.scheduler.timesteps[0] <= self.scheduler.timesteps[-1]:
+            raise RuntimeError("Wan scheduler timesteps must descend in denoising order")
         timestep = self.scheduler.timesteps[index].to(device)
-        if abs(float(timestep.float().item()) - float(progress)) > 1.0:
-            raise RuntimeError(
-                f"scheduler cannot represent requested timestep {progress}; "
-                f"nearest value is {float(timestep.float().item()):.3f}"
-            )
         if hasattr(self.scheduler, "sigmas") and len(self.scheduler.sigmas) > index:
             sigma = self.scheduler.sigmas[index].to(device=device, dtype=torch.float32)
         else:

@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import torch
 from torch import nn
+import pytest
 
 from causalalign.geometry import opengl_to_opencv_c2w, relative_pose, so3_exp
+from causalalign.integrations.wan22 import Wan22TransitionBackend
 from causalalign.losses import stage1_objective, stage2_objective, stage3_objective
 from causalalign.models.lora import LoRALinear, freeze_except_lora, inject_lora, merge_lora_
 from causalalign.models.projector import ProjectorBank, temporal_transition
@@ -18,6 +20,25 @@ def test_paper_contract():
     assert PAPER_SPEC.target_progress == (398, 799)
     value = TOKEN_LAYOUT.split(torch.zeros(2, 128))
     assert {key: item.shape[-1] for key, item in value.items()} == {"ego": 64, "geometry": 40, "visual": 24}
+
+
+def test_wan_progress_indexes_descending_scheduler_not_native_timestep():
+    class FakeScheduler:
+        def set_timesteps(self, count, device):
+            assert count == 1000
+            self.timesteps = torch.arange(1000, 0, -1, device=device)
+            self.sigmas = self.timesteps.float() / 1000
+
+    backend = Wan22TransitionBackend.__new__(Wan22TransitionBackend)
+    nn.Module.__init__(backend)
+    backend.scheduler = FakeScheduler()
+    early_t, early_sigma = backend.scheduler_point(398, torch.device("cpu"))
+    late_t, late_sigma = backend.scheduler_point(799, torch.device("cpu"))
+    assert (early_t.item(), late_t.item()) == (602, 201)
+    assert early_t > late_t and early_sigma > late_sigma
+    assert torch.isclose(early_sigma, torch.tensor(0.602))
+    with pytest.raises(ValueError, match="scheduler index"):
+        backend.scheduler_point(1000, torch.device("cpu"))
 
 
 def test_pose_conventions():

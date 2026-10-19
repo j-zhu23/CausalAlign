@@ -19,7 +19,7 @@
 | Stage 2 训练 | 50,000 updates；AdamW `2e-4`；warmup 1,000 + cosine；per-GPU batch 4 |
 | Stage 2 loss | `sum_{l,s} omega_s ||Q_l(Gamma(h_t,h_t+1))-delta_T||²` |
 | Stage 3 位置 | Wan2.2 第二个 Transformer 的 layers `{10,12,14,20}` |
-| Stage 3 timestep | native diffusion timestep `{398,799}`，运行时在 scheduler 中按数值匹配 |
+| Stage 3 去噪进度 | `{398,799}` 是降序 1,000 步 scheduler 的索引，运行时由对应位置取得原生 timestep 与 sigma；398 比 799 更早、噪声更高 |
 | Stage 3 LoRA | rank/alpha `16/16`；self/cross-attention 的 Q/K/V/O；dropout 0 |
 | Stage 3 优化 | 12 updates；AdamW `7e-6`；warmup 2 + cosine；8 GPU、microbatch 1、accumulation 9，global batch 72 |
 | Stage 3 loss | `L_pose + 0.2 L_delta` |
