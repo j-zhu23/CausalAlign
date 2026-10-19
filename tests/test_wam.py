@@ -12,7 +12,7 @@ import torch
 import torch.nn.functional as F
 
 ROOT = Path(__file__).resolve().parents[1]
-WAM = ROOT / "WAM"
+WAM = ROOT / "wam"
 
 
 @pytest.fixture

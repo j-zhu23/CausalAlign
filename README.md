@@ -29,19 +29,6 @@ This repository includes deterministic DL3DV/RealEstate10K manifests, LingBot fe
 
 Detailed Chinese documentation is available in [README_CN.md](README_CN.md).
 
-## WAM extension experiment
-
-[`WAM/`](WAM/) transfers a frozen CausalAlign Wan2.2-TI2V-5B video expert into a
-Fast-WAM policy and provides RoboCasa365 data preparation, Human300 pretraining,
-Target100 fine-tuning, and closed-loop evaluation. It is an extension experiment,
-not a fourth CausalAlign training stage, and no ablation code is included.
-
-The WAM path uses a current-frame observation made from three cameras plus the
-current proprioceptive state. Its frozen video adapter must target the 5B model;
-the A14B Stage 3 checkpoint from the default recipe is not architecture-compatible.
-See the [WAM reproduction guide](WAM/README.md) for the exact adapter contract,
-data interfaces, training schedule, and evaluation commands.
-
 ## Method contract
 
 | Component | Configuration |
@@ -165,6 +152,19 @@ pytest -q
 
 The validator checks the fixed recipe, data finiteness, 40-layer A14B architecture, 36-channel I2V input, 5120D hidden representation, and flow scheduler.
 
+## WAM extension experiment
+
+[`wam/`](wam/) transfers a frozen CausalAlign Wan2.2-TI2V-5B video expert into a
+Fast-WAM policy and provides RoboCasa365 data preparation, Human300 pretraining,
+Target100 fine-tuning, and closed-loop evaluation. It is an extension experiment,
+not a fourth CausalAlign training stage, and no ablation code is included.
+
+The WAM path uses a current-frame observation made from three cameras plus the
+current proprioceptive state. Its frozen video adapter must target the 5B model;
+the A14B Stage 3 checkpoint from the default recipe is not architecture-compatible.
+See the [WAM reproduction guide](wam/README.md) for the exact adapter contract,
+data interfaces, training schedule, and evaluation commands.
+
 ## Export
 
 ~~~bash
@@ -187,7 +187,7 @@ causalalign/              Core package
 configs/                  Fixed release recipes
 tools/                    Preparation, caching, validation, and export
 tests/                    Unit and contract tests
-WAM/                      Fast-WAM transfer and RoboCasa365 evaluation
+wam/                      Fast-WAM transfer and RoboCasa365 evaluation
 third_party/              Notices and licenses for WAM-derived components
 demo/                     Project demo assets
 ~~~

@@ -33,7 +33,7 @@ python -m pip install -e '.[wam]'
 ```
 
 ```sh
-export PYTHONPATH="$PWD/WAM:$PWD/WAM/src:$PWD/WAM/evaluation${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH="$PWD/wam:$PWD/wam/src:$PWD/wam/evaluation${PYTHONPATH:+:$PYTHONPATH}"
 export WAM_RUN_ROOT=/path/to/wam_run             # prepared data, configs, checkpoints
 export DIFFSYNTH_MODEL_BASE_PATH=/path/to/models # contains Wan-AI/Wan2.2-TI2V-5B
 export DIFFSYNTH_SKIP_DOWNLOAD=true
@@ -51,16 +51,16 @@ not committed to the repository.
 Create the action backbone once:
 
 ```sh
-python WAM/scripts/preprocess_action_dit_backbone.py --model-config WAM/configs/model.yaml \
+python wam/scripts/preprocess_action_dit_backbone.py --model-config wam/configs/model.yaml \
   --output "$WAM_ACTION_BACKBONE" --dtype bfloat16
 ```
 
 ## Data
 
 ```sh
-python WAM/prepare_data.py --root "$WAM_RUN_ROOT" --stage human300 --datasets human300.json
-python WAM/prepare_data.py --root "$WAM_RUN_ROOT" --stage target100 --datasets target100.json
-python WAM/prepare_text.py --root "$WAM_RUN_ROOT" --model-dir "$DIFFSYNTH_MODEL_BASE_PATH/Wan-AI/Wan2.2-TI2V-5B"
+python wam/prepare_data.py --root "$WAM_RUN_ROOT" --stage human300 --datasets human300.json
+python wam/prepare_data.py --root "$WAM_RUN_ROOT" --stage target100 --datasets target100.json
+python wam/prepare_text.py --root "$WAM_RUN_ROOT" --model-dir "$DIFFSYNTH_MODEL_BASE_PATH/Wan-AI/Wan2.2-TI2V-5B"
 ```
 
 `human300.json` lists the roots of the 300 RoboCasa365 human pretraining datasets
@@ -74,13 +74,13 @@ place. Prompt embeddings (UMT5, 512 tokens) are cached under `text_cache/`.
 ## Training
 
 ```sh
-python WAM/configure.py --root "$WAM_RUN_ROOT" --stage human300
+python wam/configure.py --root "$WAM_RUN_ROOT" --stage human300
 # 16 ranks in total (for example two nodes of 8 GPUs) with torchrun:
-torchrun --nnodes=2 --nproc_per_node=8 <rendezvous options> WAM/train_human300.py
+torchrun --nnodes=2 --nproc_per_node=8 <rendezvous options> wam/train_human300.py
 
-python WAM/configure.py --root "$WAM_RUN_ROOT" --stage target100 \
+python wam/configure.py --root "$WAM_RUN_ROOT" --stage target100 \
   --initial-checkpoint "$WAM_RUN_ROOT/runs/pretrain/checkpoints/weights/step_060000.pt"
-TARGET_GROUP=atomic_seen torchrun --standalone --nproc_per_node=8 WAM/train_target100.py
+TARGET_GROUP=atomic_seen torchrun --standalone --nproc_per_node=8 wam/train_target100.py
 ```
 
 | | Human300 pretraining | Target100 fine-tuning |
@@ -106,11 +106,11 @@ MuJoCo 3.3.1 (`evaluation/requirements.txt`), and renders with Mesa llvmpipe on 
 ```sh
 export ROBOCASA_ENV=/path/to/simulator_env   # Python prefix of the simulator environment
 export WAM_EVAL_ROOT=/path/to/eval_output
-python WAM/evaluation/prepare.py
-CUDA_VISIBLE_DEVICES=0 python WAM/evaluation/policy_server.py worker0 8700 0
+python wam/evaluation/prepare.py
+CUDA_VISIBLE_DEVICES=0 python wam/evaluation/policy_server.py worker0 8700 0
 # In a second shell, with the same variables, in the simulator environment:
 for case in "$WAM_EVAL_ROOT"/cases/*.json; do
-  "$ROBOCASA_ENV/bin/python" WAM/evaluation/episode.py --case "$case" --port 8700 --worker worker0
+  "$ROBOCASA_ENV/bin/python" wam/evaluation/episode.py --case "$case" --port 8700 --worker worker0
 done
 ```
 

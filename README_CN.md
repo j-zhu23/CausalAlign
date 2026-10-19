@@ -186,13 +186,13 @@ Stage 间通过 `paper_spec_sha256` 和 stage 编号严格校验，不能误接�
 
 ## 8. WAM 拓展实验
 
-`WAM/` 将冻结的 CausalAlign Wan2.2-TI2V-5B video expert 接入 Fast-WAM，包含
+`wam/` 将冻结的 CausalAlign Wan2.2-TI2V-5B video expert 接入 Fast-WAM，包含
 RoboCasa365 数据准备、Human300 预训练、Target100 微调以及闭环评测。这是三阶段
 CausalAlign 训练完成后的拓展实验，不是第四个训练阶段；仓库未收录 ablation 代码。
 
 该实现使用三路相机当前帧与当前 proprioceptive state。WAM 所需 LoRA 必须针对
 Wan2.2-TI2V-5B 训练，不能直接使用本仓库默认 A14B recipe 的 Stage 3 权重。安装与
-checkpoint 格式、训练配置和评测命令见 [`WAM/README.md`](WAM/README.md)：
+checkpoint 格式、训练配置和评测命令见 [`wam/README.md`](wam/README.md)：
 
 ```bash
 pip install -e '.[wam,test]'

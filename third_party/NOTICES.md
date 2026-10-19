@@ -2,7 +2,7 @@
 
 ## Fast-WAM
 
-`WAM/src/fastwam/` and `WAM/scripts/preprocess_action_dit_backbone.py` come from
+`wam/src/fastwam/` and `wam/scripts/preprocess_action_dit_backbone.py` come from
 Fast-WAM (https://github.com/yuantianyuan01/FastWAM), commit
 `45d8e1458921d83f8ad6cf9ce993d371208dabd0`, MIT License, Copyright (c) 2026 The
 FastWAM Authors (`FastWAM-LICENSE`). Files are unchanged from that commit except:
@@ -21,7 +21,7 @@ upstream origin is not stated in the Fast-WAM repository.
 
 ## OpenWAM
 
-`WAM/reference_video_io.py` is copied unchanged from OpenWAM, revision
+`wam/reference_video_io.py` is copied unchanged from OpenWAM, revision
 `7c5861e45cfe1339a0323f0e0b03a3316c37971c`, Apache License 2.0 (`OpenWAM-LICENSE`).
 
 ## Not included
